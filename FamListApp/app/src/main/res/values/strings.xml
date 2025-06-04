@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">FamList</string>
+    <string name="welcome_to_famlist">Welcome to FamList!</string>
+    <string name="create_new_family">Create New Family</string>
+    <string name="join_existing_family">Join Existing Family</string>
+    <string name="shopping_list_title">Shopping List</string>
+    <string name="add_item_dialog_title">Add New Item</string>
+    <string name="item_name_label">Item Name</string>
+    <string name="priority_label">Priority:</string>
+    <string name="category_label">Category:</string>
+    <string name="add_button">Add</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="filter_items_title">Filter Items</string>
+    <string name="filter_by_category">Filter by Category:</string>
+    <string name="filter_by_member">Filter by Member:</string>
+    <string name="filter_by_priority">Filter by Priority:</string>
+    <string name="apply_filters_button">Apply Filters</string>
+    <string name="seasonal_recommendations">💡 Seasonal Recommendations</string>
+    <string name="i_want_to_buy">I want to buy</string>
+    <string name="voice_input_button">Voice</string>
+    <string name="view_history_button">View History</string>
+    <string name="clear_bought_items_button">🧹 Clear Bought Items</string>
+</resources>

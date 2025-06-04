@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">家清單</string>
+    <string name="welcome_to_famlist">歡迎來到家清單!</string>
+    <string name="create_new_family">建立新家庭</string>
+    <string name="join_existing_family">加入現有家庭</string>
+    <string name="shopping_list_title">購物清單</string>
+    <string name="add_item_dialog_title">新增物品</string>
+    <string name="item_name_label">物品名稱</string>
+    <string name="priority_label">優先順序:</string>
+    <string name="category_label">分類:</string>
+    <string name="add_button">新增</string>
+    <string name="cancel_button">取消</string>
+    <string name="filter_items_title">篩選物品</string>
+    <string name="filter_by_category">按分類篩選:</string>
+    <string name="filter_by_member">按成員篩選:</string>
+    <string name="filter_by_priority">按優先順序篩選:</string>
+    <string name="apply_filters_button">套用篩選</string>
+    <string name="seasonal_recommendations">💡 時令推薦</string>
+    <string name="i_want_to_buy">我要買東西</string>
+    <string name="voice_input_button">語音</string>
+    <string name="view_history_button">檢視歷史記錄</string>
+    <string name="clear_bought_items_button">🧹 清理已買到的</string>
+</resources>
