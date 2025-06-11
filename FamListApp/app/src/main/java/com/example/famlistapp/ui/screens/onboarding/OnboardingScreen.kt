@@ -10,6 +10,8 @@ import androidx.compose.ui.res.stringResource // Import stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.famlistapp.R // Import R class for string resources
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ButtonDefaults
 // For animations, you might use:
 // import androidx.compose.animation.AnimatedVisibility
 // import androidx.compose.animation.ExperimentalAnimationApi

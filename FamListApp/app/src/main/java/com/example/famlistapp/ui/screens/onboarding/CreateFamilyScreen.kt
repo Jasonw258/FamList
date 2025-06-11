@@ -8,7 +8,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.famlistapp.ui.theme.FamListAppTheme
 import kotlin.random.Random
+import androidx.compose.foundation.text.KeyboardOptions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -103,7 +104,7 @@ fun CreateFamilyScreen(
                     onClick = { clipboardManager.setText(AnnotatedString(familyCode)) /* TODO: Show toast/feedback */ },
                     modifier = Modifier.weight(1f).padding(start = 4.dp)
                 ) {
-                    Icon(Icons.Filled.ContentCopy, contentDescription = "Copy Icon", modifier = Modifier.size(ButtonDefaults.IconSize))
+                    Icon(Icons.Filled.Add, contentDescription = "Copy Icon", modifier = Modifier.size(ButtonDefaults.IconSize))
                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
                     Text("复制邀请码") // Copy Invite Code
                 }

@@ -11,8 +11,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.FilterList
-import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -28,10 +26,12 @@ import com.example.famlistapp.R // Import R class
 import com.example.famlistapp.data.model.ShoppingItem
 import com.example.famlistapp.data.model.ShoppingItemPriority
 import com.example.famlistapp.data.model.User
-import com.example.famlistapp.data.model.LocalizedData
+import com.example.famlistapp.data.LocalizedData
 import com.example.famlistapp.ui.theme.FamListAppTheme
 import com.example.famlistapp.ui.screens.shoppinglist.viewmodel.UserShoppingList
 import java.util.concurrent.TimeUnit
+import androidx.compose.runtime.mutableStateOf
+import com.example.famlistapp.constants.DefaultPurchaseLocations
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,26 +72,26 @@ fun ShoppingListScreen(
                     }
                     var showFilterDialog by remember { mutableStateOf(false) }
                     IconButton(onClick = { showFilterDialog = true }) {
-                        Icon(Icons.Filled.FilterList, contentDescription = stringResource(R.string.filter_items_title))
+                        Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.filter_items_title))
                     }
                     if (showFilterDialog) {
                         val availableUsers = groupedItems.map { it.user }
-                        val selectedCategories = remember { mutableStateSetOf<String>() }
-                        val selectedUserIds = remember { mutableStateSetOf<String>() }
-                        val selectedPriorities = remember { mutableStateSetOf<String>() }
+                        val selectedCategories = remember { mutableStateOf(setOf<String>()) }
+                        val selectedUserIds = remember { mutableStateOf(setOf<String>()) }
+                        val selectedPriorities = remember { mutableStateOf(setOf<String>()) }
                         FilterDialog(
                             onDismissRequest = { showFilterDialog = false },
                             availableUsers = availableUsers,
-                            availableCategories = LocalizedData.DefaultCategories.categories,
+                            availableCategories = LocalizedData.categories.values.toList(),
                             availablePriorities = ShoppingItemPriority.values().toList(),
                             selectedCategories = selectedCategories,
-                            onCategorySelected = { category, isSelected -> if (isSelected) selectedCategories.add(category) else selectedCategories.remove(category) },
+                            onCategorySelected = { category, isSelected -> if (isSelected) selectedCategories.value = selectedCategories.value + category else selectedCategories.value = selectedCategories.value - category },
                             selectedUserIds = selectedUserIds,
-                            onUserSelected = { userId, isSelected -> if (isSelected) selectedUserIds.add(userId) else selectedUserIds.remove(userId) },
+                            onUserSelected = { userId, isSelected -> if (isSelected) selectedUserIds.value = selectedUserIds.value + userId else selectedUserIds.value = selectedUserIds.value - userId },
                             selectedPriorities = selectedPriorities,
-                            onPrioritySelected = { priority, isSelected -> if (isSelected) selectedPriorities.add(priority.displayName) else selectedPriorities.remove(priority.displayName) },
+                            onPrioritySelected = { priority, isSelected -> if (isSelected) selectedPriorities.value = selectedPriorities.value + priority.displayName else selectedPriorities.value = selectedPriorities.value - priority.displayName },
                             onApplyFilters = {
-                                println("Applying filters: Cat=${selectedCategories.joinToString()}, Users=${selectedUserIds.joinToString()}, Prio=${selectedPriorities.joinToString()}")
+                                println("Applying filters: Cat=${selectedCategories.value.joinToString(", ")}, Users=${selectedUserIds.value.joinToString(", ")}, Prio=${selectedPriorities.value.joinToString(", ")}")
                                 showFilterDialog = false
                             }
                         )
@@ -166,7 +166,7 @@ fun ShoppingListScreen(
                     onClick = onVoiceInputClicked,
                     modifier = Modifier.weight(if (groupedItems.isEmpty()) 1f else 0.6f)
                 ) {
-                    Icon(Icons.Filled.Mic, contentDescription = null)
+                    Icon(Icons.Filled.Add, contentDescription = null)
                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
                     Text(stringResource(R.string.voice_input_button))
                 }
@@ -215,11 +215,11 @@ fun FilterDialog(
     availableUsers: List<User>,
     availableCategories: List<String>,
     availablePriorities: List<ShoppingItemPriority>,
-    selectedCategories: Set<String>,
+    selectedCategories: MutableState<Set<String>>,
     onCategorySelected: (String, Boolean) -> Unit,
-    selectedUserIds: Set<String>,
+    selectedUserIds: MutableState<Set<String>>,
     onUserSelected: (String, Boolean) -> Unit,
-    selectedPriorities: Set<String>,
+    selectedPriorities: MutableState<Set<String>>,
     onPrioritySelected: (ShoppingItemPriority, Boolean) -> Unit,
     onApplyFilters: () -> Unit
 ) {
@@ -231,21 +231,21 @@ fun FilterDialog(
                 Text(stringResource(R.string.filter_by_category), style = MaterialTheme.typography.titleSmall)
                 FlowRow(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                     availableCategories.forEach { category ->
-                        FilterChip(selected = selectedCategories.contains(category), onClick = { onCategorySelected(category, !selectedCategories.contains(category)) }, label = { Text(category) })
+                        FilterChip(selected = selectedCategories.value.contains(category), onClick = { onCategorySelected(category, !selectedCategories.value.contains(category)) }, label = { Text(category) })
                     }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(stringResource(R.string.filter_by_member), style = MaterialTheme.typography.titleSmall)
                 FlowRow(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                     availableUsers.forEach { user ->
-                        FilterChip(selected = selectedUserIds.contains(user.id), onClick = { onUserSelected(user.id, !selectedUserIds.contains(user.id)) }, label = { Text(user.nickname) })
+                        FilterChip(selected = selectedUserIds.value.contains(user.id), onClick = { onUserSelected(user.id, !selectedUserIds.value.contains(user.id)) }, label = { Text(user.nickname) })
                     }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(stringResource(R.string.filter_by_priority), style = MaterialTheme.typography.titleSmall)
                 FlowRow(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                     availablePriorities.forEach { priority ->
-                        FilterChip(selected = selectedPriorities.contains(priority.displayName), onClick = { onPrioritySelected(priority, !selectedPriorities.contains(priority.displayName)) }, label = { Text(priority.displayName) })
+                        FilterChip(selected = selectedPriorities.value.contains(priority.displayName), onClick = { onPrioritySelected(priority, !selectedPriorities.value.contains(priority.displayName)) }, label = { Text(priority.displayName) })
                     }
                 }
             }
@@ -287,7 +287,7 @@ fun AddItemDialog(
                     ExposedDropdownMenuBox(expanded = unitExpanded, onExpandedChange = { unitExpanded = !unitExpanded }, modifier = Modifier.weight(1f)) {
                         OutlinedTextField(value = selectedUnit ?: "单位", onValueChange = {}, readOnly = true, trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = unitExpanded) }, modifier = Modifier.menuAnchor())
                         ExposedDropdownMenu(expanded = unitExpanded, onDismissRequest = { unitExpanded = false }) {
-                            LocalizedData.DefaultUnits.units.forEach { unit -> DropdownMenuItem(text = { Text(unit) }, onClick = { onUnitSelected(unit); unitExpanded = false }) }
+                            LocalizedData.units.forEach { (key, value) -> DropdownMenuItem(text = { Text(value) }, onClick = { onUnitSelected(key); unitExpanded = false }) }
                         }
                     }
                 }
@@ -304,8 +304,8 @@ fun AddItemDialog(
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(stringResource(R.string.category_label), style = MaterialTheme.typography.labelMedium)
                 FlowRow(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    LocalizedData.DefaultCategories.categories.forEach { category ->
-                        FilterChip(selected = (category == selectedCategory), onClick = { onCategorySelected(if (category == selectedCategory) null else category) }, label = { Text(category) })
+                    LocalizedData.categories.forEach { (key, value) ->
+                        FilterChip(selected = (key == selectedCategory), onClick = { onCategorySelected(if (key == selectedCategory) null else key) }, label = { Text(value) })
                     }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
@@ -447,12 +447,3 @@ fun ShoppingListScreenEmptyPreview() {
         )
     }
 }
-// Ensure R class is imported: import com.example.famlistapp.R
-// Ensure stringResource is used for all user-facing strings.
-// For example, in AddItemDialog:
-// label = { Text("数量") } should be label = { Text(stringResource(R.string.quantity_label)) }
-// value = selectedUnit ?: "单位" should be value = selectedUnit ?: stringResource(R.string.unit_placeholder)
-// Text("购买地点:") should be Text(stringResource(R.string.purchase_location_label))
-// value = selectedLocation ?: "选择地点" should be value = selectedLocation ?: stringResource(R.string.select_location_placeholder)
-// Similar changes for UserGroupHeader, ShoppingListItemRow, etc.
-// This step focuses on structure; full string resource integration is a larger task.

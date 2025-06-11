@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- 包含需要备份的文件 -->
+    <include domain="database" path="."/>
+    <include domain="sharedpref" path="."/>
+    
+    <!-- 排除不需要备份的文件 -->
+    <exclude domain="database" path="temp.db"/>
+</full-backup-content> 

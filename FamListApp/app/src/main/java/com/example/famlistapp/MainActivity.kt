@@ -87,15 +87,17 @@ fun FamListApp() {
 
                 // Conceptual placeholder call without actual ViewModel instance:
                 ShoppingListScreen(
-                    items = emptyList(), // Or provide some static preview items
-                    onAddItem = { _,_ -> }, // Updated lambda for addItem
+                    groupedItems = emptyList(),  // 使用正确的参数名
+                    onAddItem = { name, category, quantity, unit, notes, priority -> 
+                        // TODO: 在这里处理添加项目的逻辑
+                    },
                     onToggleItemBought = {},
                     onDeleteItem = {},
                     onVoiceInputClicked = {},
                     onClearBoughtItemsClicked = {
                         // shoppingListViewModel.onClearBoughtItemsClicked() // Example call
                         println("MainActivity: Clear Bought Items Clicked")
-                                              },
+                    },
                     onViewHistoryClicked = { currentScreen = Screen.ShoppingHistory } // Navigate to History
                 )
             }

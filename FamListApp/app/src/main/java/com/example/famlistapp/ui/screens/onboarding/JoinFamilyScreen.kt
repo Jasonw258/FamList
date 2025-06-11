@@ -19,6 +19,9 @@ import androidx.compose.ui.unit.dp
 // import androidx.compose.animation.*
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.famlistapp.ui.theme.FamListAppTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.foundation.text.KeyboardOptions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
